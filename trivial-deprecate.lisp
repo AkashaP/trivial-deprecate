@@ -35,11 +35,14 @@
 (defun %internal-deprecate (fn reason)
   (when (gethash fn *deprecated-functions*)
     (do-function-already-deprecated (gethash fn *deprecated-functions*)))
-  (let ((res (lambda (&rest stuff)
-               "Deprecated function"
-               (declare (ignorable stuff))
-               (do-deprecation-notice fn reason)
-               (funcall fn))))
+  (let* ((noticed nil)
+         (res (lambda (&rest stuff)
+                "Deprecated function"
+                (declare (ignorable stuff))
+                (unless noticed
+                  (do-deprecation-notice fn reason)
+                  (setq noticed t))
+                (apply fn stuff))))
     (setf (gethash res *deprecated-functions*) fn)
     res))
 
