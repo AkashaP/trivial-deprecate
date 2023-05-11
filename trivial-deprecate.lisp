@@ -45,10 +45,8 @@
 
 (defmacro deprecate (reference)
   "Deprecate a reference"
-  (let ((sym (gensym "reference"))
-        (val (gensym "reference")))
-    `(let ((,sym ',reference)
-           (,val ,reference))
+  (let ((sym (gensym "reference")))
+    `(let ((,sym ',reference))
        (if (and (listp ,sym)
                 (equalp (first ,sym) 'common-lisp:function))
            (setf (fdefinition (second ,sym))
@@ -56,10 +54,8 @@
            (deprecate1 ,reference)))))
 
 (defmacro undeprecate (reference)
-  (let ((sym (gensym "reference"))
-        (val (gensym "reference")))
-    `(let ((,sym ',reference)
-           (,val ,reference))
+  (let ((sym (gensym "reference")))
+    `(let ((,sym ',reference))
        (if (and (listp ,sym)
                 (equalp (first ,sym) 'common-lisp:function))
            (setf (fdefinition (second ,sym))
